@@ -31,8 +31,9 @@ const Register = () => {
   // Check if user is already logged in and redirect if needed
   useEffect(() => {
     if (user && !loading) {
-      // Default to regular user dashboard on registration
-      navigate('/dashboard');
+      // Redirect based on user role
+      const isAdmin = user.email?.includes('admin');
+      navigate(isAdmin ? '/admin/dashboard' : '/dashboard');
     }
   }, [user, loading, navigate]);
 
@@ -77,7 +78,9 @@ const Register = () => {
           title: "Registration successful!",
           description: "Please check your email to confirm your account.",
         });
-        navigate("/login");
+        // Redirect based on user role
+        const isAdmin = user.email?.includes('admin');
+        navigate(isAdmin ? '/admin/dashboard' : '/login');
       } else {
         toast({
           title: "Registration failed",
