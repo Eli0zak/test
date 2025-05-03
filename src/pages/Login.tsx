@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -75,6 +74,19 @@ const Login = () => {
       <AuthLayout
         title="مرحباً بك مجدداً"
         description="جاري التحقق من حالة تسجيل الدخول..."
+      >
+        <div className="flex items-center justify-center p-8">
+          <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-primary"></div>
+        </div>
+      </AuthLayout>
+    );
+  }
+
+  if (!user) {
+    return (
+      <AuthLayout
+        title="Loading..."
+        description="Please wait while we verify your login."
       >
         <div className="flex items-center justify-center p-8">
           <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-primary"></div>

@@ -100,6 +100,19 @@ const Register = () => {
     );
   }
 
+  if (!user) {
+    return (
+      <AuthLayout
+        title="Loading..."
+        description="Please wait while we verify your account."
+      >
+        <div className="flex items-center justify-center p-8">
+          <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-primary"></div>
+        </div>
+      </AuthLayout>
+    );
+  }
+
   return (
     <AuthLayout
       title="اشتراك جديد"
