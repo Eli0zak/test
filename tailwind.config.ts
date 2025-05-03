@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -65,9 +66,9 @@ export default {
 				},
 				pet: {
 					purple: {
-						DEFAULT: '#9b87f5',
-						dark: '#7E69AB',
-						light: '#E5DEFF',
+						DEFAULT: '#9b54c8',
+						dark: '#7d3aac',
+						light: '#e5d4f0',
 					},
 					green: '#F2FCE2',
 					yellow: '#FEF7CD',
@@ -111,6 +112,9 @@ export default {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'pulse-slow': 'pulse-slow 3s ease-in-out infinite'
+			},
+			backgroundImage: {
+				'hero-pattern': "url('/lovable-uploads/61f2c151-5a62-4a21-9050-0d1281a32afd.png')",
 			}
 		}
 	},

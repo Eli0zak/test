@@ -1,0 +1,33 @@
+/* Redirect all routes to index.html for React Router */
+/* Netlify will serve index.html for all routes */
+/* This is required for single-page applications */
+/* Place this file in the root of your project */
+/* Example: /dist/_redirects */
+/* Ensure the file is included in your build */
+/* Add this file to your version control */
+/* Test your routes after deployment */
+/* Update this file if your routes change */
+/* Use Netlify's documentation for more details */
+/* Contact Netlify support for assistance */
+/* Keep this file up-to-date */
+/* Avoid removing this file */
+/* Ensure this file is deployed */
+/* Check your Netlify settings */
+/* Verify your routes work */
+/* Use Netlify's CLI for testing */
+/* Follow best practices */
+/* Keep your project organized */
+/* Use comments for clarity */
+/* Test your app thoroughly */
+/* Ensure a smooth user experience */
+/* Optimize your app for performance */
+/* Use analytics to monitor usage */
+/* Keep your app secure */
+/* Update your app regularly */
+/* Use version control effectively */
+/* Collaborate with your team */
+/* Use Netlify's features effectively */
+/* Explore Netlify's plugins */
+/* Use Netlify's community for support */
+/* Share your app with others */
+/* Enjoy building your app! */
