@@ -1,3 +1,4 @@
+
 export type PlanType = "basic" | "comfort" | "vip";
 
 export type PetType = "dog" | "cat" | "bird" | "rabbit" | "fish" | "reptile" | "other";

@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 20%;
 
-    --primary: 252 80% 75%;
+    --primary: 270 80% 50%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 260 30% 54%;
@@ -31,18 +31,18 @@
 
     --border: 240 10% 90%;
     --input: 240 10% 90%;
-    --ring: 252 80% 75%;
+    --ring: 270 80% 50%;
 
     --radius: 0.75rem;
 
     --sidebar-background: 250 100% 99%;
     --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 252 80% 75%;
+    --sidebar-primary: 270 80% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 250 20% 95%;
     --sidebar-accent-foreground: 240 10% 20%;
     --sidebar-border: 240 10% 90%;
-    --sidebar-ring: 252 80% 75%;
+    --sidebar-ring: 270 80% 50%;
   }
 
   .dark {
@@ -55,7 +55,7 @@
     --popover: 240 10% 8%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 252 80% 75%;
+    --primary: 270 80% 50%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 260 30% 54%;
@@ -72,16 +72,16 @@
 
     --border: 240 10% 20%;
     --input: 240 10% 20%;
-    --ring: 252 80% 75%;
+    --ring: 270 80% 50%;
     
     --sidebar-background: 240 10% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 252 80% 75%;
+    --sidebar-primary: 270 80% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 10% 20%;
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 10% 20%;
-    --sidebar-ring: 252 80% 75%;
+    --sidebar-ring: 270 80% 50%;
   }
 }
 
@@ -92,6 +92,12 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+  
+  /* Arabic text alignment */
+  .ar {
+    direction: rtl;
+    text-align: right;
   }
 }
 
@@ -115,5 +121,17 @@
   .badge-scan-count {
     @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors 
     focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-pet-yellow text-foreground;
+  }
+  
+  .hero-section {
+    @apply bg-gradient-to-r from-indigo-800 via-purple-700 to-indigo-800 text-white;
+  }
+  
+  .feature-card {
+    @apply bg-white p-6 rounded-lg shadow-md text-center;
+  }
+  
+  .subscribe-button {
+    @apply bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-full transition-colors;
   }
 }

@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -56,12 +57,42 @@ const UpgradePlanDialog = ({
         </div>
 
         <ul className="space-y-2 mb-6">
-          {planInfo.features.map((feature, index) => (
-            <li key={index} className="flex items-center gap-2">
+          <li className="flex items-center gap-2">
+            <Check size={16} className="text-pet-purple" />
+            <span>Up to {planInfo.features.maxPets === 999 ? "Unlimited" : planInfo.features.maxPets} pets</span>
+          </li>
+          <li className="flex items-center gap-2">
+            {planInfo.features.notifications.email ? (
               <Check size={16} className="text-pet-purple" />
-              <span>{feature}</span>
-            </li>
-          ))}
+            ) : (
+              <div className="w-4 h-4 rounded-full border border-muted-foreground" />
+            )}
+            <span>Email notifications</span>
+          </li>
+          <li className="flex items-center gap-2">
+            {planInfo.features.notifications.whatsapp ? (
+              <Check size={16} className="text-pet-purple" />
+            ) : (
+              <div className="w-4 h-4 rounded-full border border-muted-foreground" />
+            )}
+            <span>WhatsApp notifications</span>
+          </li>
+          <li className="flex items-center gap-2">
+            {planInfo.features.customPhoto ? (
+              <Check size={16} className="text-pet-purple" />
+            ) : (
+              <div className="w-4 h-4 rounded-full border border-muted-foreground" />
+            )}
+            <span>Custom pet photo</span>
+          </li>
+          <li className="flex items-center gap-2">
+            {planInfo.features.locationTracking ? (
+              <Check size={16} className="text-pet-purple" />
+            ) : (
+              <div className="w-4 h-4 rounded-full border border-muted-foreground" />
+            )}
+            <span>Location tracking</span>
+          </li>
         </ul>
 
         <Button

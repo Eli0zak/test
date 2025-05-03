@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -12,10 +13,10 @@ import { planFeatures, canAddMorePets } from "@/lib/plans";
 import { Bell, Map, Plus, Check } from "lucide-react";
 
 const Dashboard = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [animals, setAnimals] = useState([]);
-  const [upgradePlanOpen, setUpgradePlanOpen] = useState(false);
   const { user, userPlan, updateUserData } = useAuth();
+  const [animals, setAnimals] = useState<Animal[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [upgradePlanOpen, setUpgradePlanOpen] = useState(false);
 
   useEffect(() => {
     const fetchAnimals = async () => {

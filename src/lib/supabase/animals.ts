@@ -1,6 +1,7 @@
+
 import { supabase } from './client';
 import { toast } from '@/hooks/use-toast';
-import { Animal } from '@/types';
+import { Animal, PetType } from '@/types';
 
 // Animal functions
 export const getAnimals = async (userId?: string | null, isAdmin = false): Promise<Animal[]> => {
@@ -27,7 +28,11 @@ export const getAnimals = async (userId?: string | null, isAdmin = false): Promi
       return [];
     }
 
-    return data || [];
+    return data?.map(animal => ({
+      ...animal,
+      type: animal.type as PetType,
+      plan: animal.plan as any
+    })) || [];
   } catch (error: any) {
     console.error("Error in getAnimals:", error);
     toast({

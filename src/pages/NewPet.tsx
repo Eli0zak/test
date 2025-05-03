@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,16 +18,6 @@ const NewPet = () => {
   const navigate = useNavigate();
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [upgradePlanOpen, setUpgradePlanOpen] = useState(false);
-
-  useEffect(() => {
-    const fetchAnimals = async () => {
-      if (user) {
-        const fetchedAnimals = await createAnimal.getAnimals(user.id);
-        setAnimals(fetchedAnimals);
-      }
-    };
-    fetchAnimals();
-  }, [user]);
 
   const handleCancel = () => {
     navigate("/pets");
@@ -58,7 +49,6 @@ const NewPet = () => {
     });
 
     if (newAnimal) {
-      setAnimals((prev) => [...prev, newAnimal]);
       navigate("/pets");
       return newAnimal;
     }

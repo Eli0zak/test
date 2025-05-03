@@ -1,136 +1,162 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import TagLayout from "@/components/layout/TagLayout";
+
+import { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
 import { getAnimalById, recordAnimalScan } from "@/lib/supabase";
 import { Animal } from "@/types";
-import { User, Mail, MapPin } from "lucide-react";
-import { planFeatures } from "@/lib/plans";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { PawPrint, Phone, Mail, AlertTriangle, Home } from "lucide-react";
 
 const TagPage = () => {
   const { id } = useParams<{ id: string }>();
   const [animal, setAnimal] = useState<Animal | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchAnimal = async () => {
-      if (!id) {
-        setError("No tag ID provided");
-        setIsLoading(false);
-        return;
-      }
-
+      setLoading(true);
       try {
-        setIsLoading(true);
-        
-        // Record the scan
-        await recordAnimalScan(id);
-        
-        // Get the animal data
+        if (!id) {
+          setError("معرف الحيوان غير صالح");
+          setLoading(false);
+          return;
+        }
+
         const animalData = await getAnimalById(id);
         
-        if (animalData) {
-          setAnimal(animalData);
-        } else {
-          setError("Pet not found");
+        if (!animalData) {
+          setError("لم يتم العثور على الحيوان");
+          setLoading(false);
+          return;
         }
-      } catch (err) {
-        console.error("Error fetching animal:", err);
-        setError("Failed to load pet information");
+
+        // Record that the animal was scanned
+        await recordAnimalScan(id);
+        
+        // Set the animal data
+        setAnimal(animalData);
+      } catch (error) {
+        console.error("Error fetching animal:", error);
+        setError("حدث خطأ أثناء جلب بيانات الحيوان");
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     };
 
     fetchAnimal();
   }, [id]);
 
-  if (isLoading) {
+  if (loading) {
     return (
-      <TagLayout>
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex justify-center">
-              <div className="w-32 h-32 rounded-full bg-pet-purple/20 flex items-center justify-center animate-pulse">
-                <span className="text-3xl text-pet-purple">...</span>
-              </div>
-            </div>
-            <div className="mt-6 space-y-4">
-              <div className="h-8 bg-muted rounded animate-pulse" />
-              <div className="h-4 bg-muted rounded animate-pulse w-3/4 mx-auto" />
-              <div className="h-24 bg-muted rounded animate-pulse" />
-            </div>
-          </CardContent>
-        </Card>
-      </TagLayout>
+      <div className="min-h-screen bg-purple-600 flex flex-col items-center justify-center text-white p-4" dir="rtl">
+        <div className="flex items-center justify-center">
+          <img src="/lovable-uploads/d8049df2-619a-44e5-9cd8-c54416c17875.png" alt="PetTouch" className="h-16 w-16" />
+        </div>
+        <h1 className="text-2xl font-bold mt-4 mb-2">التبليغ عن حيوان</h1>
+        <p>جاري التحميل...</p>
+        <div className="mt-4 w-16 h-16 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+      </div>
     );
   }
 
   if (error || !animal) {
     return (
-      <TagLayout>
-        <Card>
-          <CardContent className="pt-6 text-center">
-            <div className="text-red-500 text-xl mb-4">
-              {error || "Something went wrong"}
-            </div>
-            <p className="text-muted-foreground">
-              We couldn't find the pet you're looking for. Please check the tag and try again.
-            </p>
-          </CardContent>
-        </Card>
-      </TagLayout>
+      <div className="min-h-screen bg-purple-600 flex flex-col items-center justify-center text-white p-4" dir="rtl">
+        <div className="flex items-center justify-center">
+          <img src="/lovable-uploads/d8049df2-619a-44e5-9cd8-c54416c17875.png" alt="PetTouch" className="h-16 w-16" />
+        </div>
+        <h1 className="text-2xl font-bold mt-4">التبليغ عن حيوان</h1>
+        <div className="max-w-md w-full bg-white text-gray-800 rounded-lg p-6 mt-8 shadow-lg">
+          <div className="flex flex-col items-center text-center">
+            <AlertTriangle size={64} className="text-red-500 mb-4" />
+            <h2 className="text-xl font-bold mb-2">خطأ</h2>
+            <p className="text-gray-600">{error || "حدث خطأ غير معروف"}</p>
+            <Button asChild className="mt-6">
+              <Link to="/">العودة إلى الصفحة الرئيسية</Link>
+            </Button>
+          </div>
+        </div>
+      </div>
     );
   }
 
   return (
-    <TagLayout>
-      <Card className={`overflow-hidden ${animal.plan === "vip" ? "pet-card-vip" : animal.plan === "comfort" ? "pet-card-comfort" : "pet-card-basic"}`}>
-        <CardContent className="pt-6">
-          <div className="flex flex-col items-center">
+    <div className="min-h-screen bg-purple-600 flex flex-col items-center p-4" dir="rtl">
+      <div className="flex items-center justify-center mb-8 mt-6">
+        <img src="/lovable-uploads/d8049df2-619a-44e5-9cd8-c54416c17875.png" alt="PetTouch" className="h-16 w-16 mr-4" />
+        <div className="text-white">
+          <h1 className="text-2xl font-bold">التبليغ عن حيوان</h1>
+          <p>كيف تريد التبليغ؟</p>
+        </div>
+      </div>
+
+      <Card className="max-w-lg w-full mb-4">
+        <CardContent className="py-6">
+          <div className="flex items-center justify-center mb-4">
             {animal.image_url ? (
-              <img
-                src={animal.image_url}
+              <img 
+                src={animal.image_url} 
                 alt={animal.name}
-                className="w-32 h-32 rounded-full object-cover border-4 border-pet-purple mb-4"
+                className="w-32 h-32 object-cover rounded-full border-4 border-primary"
               />
             ) : (
-              <div className="w-32 h-32 rounded-full bg-muted flex items-center justify-center mb-4">
-                <User size={64} className="text-muted-foreground" />
+              <div className="w-32 h-32 bg-primary rounded-full flex items-center justify-center">
+                <PawPrint className="w-16 h-16 text-white" />
               </div>
             )}
+          </div>
+
+          <div className="text-center mb-6">
             <h2 className="text-2xl font-bold mb-1">{animal.name}</h2>
-            <div className="text-muted-foreground capitalize mb-2">{animal.type}</div>
-            <div className="flex gap-4 mb-4">
-              <div className="flex items-center gap-1 text-sm">
-                <Mail size={16} className="text-pet-purple" />
-                <span>{animal.plan}</span>
-              </div>
-              <div className="flex items-center gap-1 text-sm">
-                <MapPin size={16} className="text-pet-purple" />
-                <span>Scans: {animal.scan_count}</span>
-              </div>
+            <p className="text-gray-500">{animal.type}</p>
+            <div className="mt-2">
+              <span className="inline-block bg-primary/10 text-primary text-sm px-3 py-1 rounded-full">
+                العمر: {animal.age} سنوات
+              </span>
             </div>
-            <div className="mb-2 text-sm">Age: {animal.age} years</div>
-            {animal.children_count > 0 && (
-              <div className="mb-2 text-sm">Children: {animal.children_count}</div>
-            )}
-            {animal.notes && (
-              <div className="mb-2 text-xs text-muted-foreground max-w-md text-center">
-                {animal.notes}
-              </div>
-            )}
-            <div className="mt-4">
-              <Button asChild variant="outline">
-                <a href="mailto:support@pettouch.com">Contact Owner</a>
-              </Button>
-            </div>
+          </div>
+
+          <div className="border-t border-gray-200 pt-4 mt-4">
+            <h3 className="text-lg font-semibold mb-3">معلومات إضافية</h3>
+            <p className="text-gray-700 mb-4">{animal.notes || "لا توجد ملاحظات إضافية."}</p>
           </div>
         </CardContent>
       </Card>
-    </TagLayout>
+
+      <Card className="max-w-lg w-full mb-4">
+        <CardContent className="py-6">
+          <h3 className="text-xl font-bold mb-4">تبليغ باستخدام علامة NFC</h3>
+          <p className="text-gray-600">إذا كان الحيوان يحمل علامة PetTouch، قم بمسحها هنا.</p>
+          <Button className="w-full mt-4">مسح العلامة</Button>
+        </CardContent>
+      </Card>
+
+      <Card className="max-w-lg w-full">
+        <CardContent className="py-6">
+          <h3 className="text-xl font-bold mb-4">تبليغ بدون علامة NFC</h3>
+          <p className="text-gray-600">إذا عثرت على حيوان لا يحمل علامة، يمكنك التبليغ عنه هنا.</p>
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            <Button variant="outline" className="flex items-center justify-center">
+              <Phone size={18} className="ml-2" /> اتصال
+            </Button>
+            <Button variant="outline" className="flex items-center justify-center">
+              <Mail size={18} className="ml-2" /> بريد إلكتروني
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Button asChild variant="ghost" className="mt-8 text-white">
+        <Link to="/" className="flex items-center">
+          <Home size={18} className="ml-2" /> العودة للرئيسية
+        </Link>
+      </Button>
+      
+      <footer className="mt-auto py-4 text-center text-white/80 text-sm">
+        © {new Date().getFullYear()} PetTouch. جميع الحقوق محفوظة.
+      </footer>
+    </div>
   );
 };
 

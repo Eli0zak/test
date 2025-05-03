@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -15,7 +16,6 @@ import AuthLayout from "@/components/layout/AuthLayout";
 import { signIn } from "@/lib/supabase";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
-import { useEffect } from "react";
 
 interface LoginFormValues {
   email: string;
@@ -27,28 +27,13 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { user, loading } = useAuth();
   
-  // Check if user is already logged in and redirect if needed
   useEffect(() => {
     if (user && !loading) {
-      // Check user role to determine which dashboard to show
+      // Check if user is admin based on email
       const isAdmin = user.email?.includes('admin');
       navigate(isAdmin ? '/admin/dashboard' : '/dashboard');
     }
   }, [user, loading, navigate]);
-
-  // Don't render the form while checking authentication
-  if (loading) {
-    return (
-      <AuthLayout
-        title="Welcome back"
-        description="Checking your authentication status..."
-      >
-        <div className="flex items-center justify-center p-8">
-          <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-pet-purple"></div>
-        </div>
-      </AuthLayout>
-    );
-  }
 
   const form = useForm<LoginFormValues>({
     defaultValues: {
@@ -57,32 +42,26 @@ const Login = () => {
     },
   });
 
-  // Updated error handling and loading spinner for better user feedback
   const onSubmit = async (values: LoginFormValues) => {
     try {
       setIsLoading(true);
-      const user = await signIn(values.email, values.password);
+      const response = await signIn(values.email, values.password);
       
-      if (user) {
+      if (response) {
         toast({
-          title: "Welcome back!",
-          description: "You've successfully signed in.",
+          title: "تم تسجيل الدخول بنجاح!",
+          description: "أهلاً بك مجدداً",
         });
         
-        const isAdmin = user.email?.includes('admin');
+        // Check if user is admin based on email
+        const isAdmin = values.email.includes('admin');
         navigate(isAdmin ? '/admin/dashboard' : '/dashboard');
-      } else {
-        toast({
-          title: "Login failed",
-          description: "Invalid email or password.",
-          variant: "destructive",
-        });
       }
     } catch (error) {
       console.error("Login error:", error);
       toast({
-        title: "Login failed",
-        description: "An unexpected error occurred. Please try again.",
+        title: "فشل تسجيل الدخول",
+        description: "يرجى التحقق من بيانات الاعتماد والمحاولة مرة أخرى.",
         variant: "destructive",
       });
     } finally {
@@ -90,15 +69,29 @@ const Login = () => {
     }
   };
 
+  // Don't render the form while checking authentication
+  if (loading) {
+    return (
+      <AuthLayout
+        title="مرحباً بك مجدداً"
+        description="جاري التحقق من حالة تسجيل الدخول..."
+      >
+        <div className="flex items-center justify-center p-8">
+          <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-primary"></div>
+        </div>
+      </AuthLayout>
+    );
+  }
+
   return (
     <AuthLayout
-      title="Welcome back"
-      description="Sign in to access your PetTouch account"
+      title="تسجيل الدخول"
+      description="قم بتسجيل الدخول للوصول إلى حسابك"
       footer={
-        <div>
-          Don't have an account?{" "}
-          <Link to="/register" className="text-pet-purple hover:underline font-medium">
-            Sign up
+        <div className="ar">
+          ليس لديك حساب؟{" "}
+          <Link to="/register" className="text-primary hover:underline font-medium">
+            اشتراك جديد
           </Link>
         </div>
       }
@@ -109,15 +102,15 @@ const Login = () => {
             control={form.control}
             name="email"
             rules={{
-              required: "Email is required",
+              required: "البريد الإلكتروني مطلوب",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email address",
+                message: "بريد إلكتروني غير صالح",
               },
             }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="ar">البريد الإلكتروني</FormLabel>
                 <FormControl>
                   <Input {...field} type="email" autoComplete="email" />
                 </FormControl>
@@ -128,10 +121,10 @@ const Login = () => {
           <FormField
             control={form.control}
             name="password"
-            rules={{ required: "Password is required" }}
+            rules={{ required: "كلمة المرور مطلوبة" }}
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="ar">كلمة المرور</FormLabel>
                 <FormControl>
                   <Input {...field} type="password" autoComplete="current-password" />
                 </FormControl>
@@ -140,7 +133,7 @@ const Login = () => {
             )}
           />
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Signing in..." : "Sign In"}
+            {isLoading ? "جاري تسجيل الدخول..." : "تسجيل الدخول"}
           </Button>
         </form>
       </Form>

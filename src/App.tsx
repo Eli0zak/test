@@ -24,12 +24,12 @@ const queryClient = new QueryClient();
 const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.ReactNode, requireAdmin?: boolean }) => {
   const { user, loading } = useAuth();
 
-  // If auth is still loading, show a loading indicator
+  // Show loading indicator while checking authentication
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
-  // If user is not authenticated, redirect to login
+  // If not authenticated, redirect to login
   if (!user) {
     return <Navigate to="/login" replace />;
   }
@@ -39,24 +39,26 @@ const ProtectedRoute = ({ children, requireAdmin = false }: { children: React.Re
     return <Navigate to="/dashboard" replace />;
   }
 
-  // If authenticated and passes admin check (if applicable), render the protected component
+  // If all checks pass, render the children
   return <>{children}</>;
 };
 
-// Public route wrapper that redirects to dashboard if user is already authenticated
+// Public route wrapper that redirects authenticated users
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
 
+  // Show loading indicator while checking authentication
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
+  // If already authenticated, redirect based on role
   if (user) {
-    // Redirect based on user role
     const isAdmin = user.email?.includes('admin');
     return <Navigate to={isAdmin ? '/admin/dashboard' : '/dashboard'} replace />;
   }
 
+  // If not authenticated, render the children
   return <>{children}</>;
 };
 

@@ -1,3 +1,4 @@
+
 import { supabase } from './client';
 import { toast } from '@/hooks/use-toast';
 
@@ -5,34 +6,25 @@ import { toast } from '@/hooks/use-toast';
 export const uploadPetImage = async (userId: string, petId: string, file: File) => {
   const fileExt = file.name.split('.').pop();
   const fileName = `${userId}/${petId}/pet-image.${fileExt}`;
-
+  
   const { data, error } = await supabase.storage
     .from('pet-images')
     .upload(fileName, file, {
       upsert: true,
     });
 
-  if (error || !data) {
+  if (error) {
     toast({
       title: "Failed to upload image",
-      description: error?.message || "Unknown error occurred",
+      description: error.message,
       variant: "destructive",
     });
     return null;
   }
 
-  const { data: urlData, error: urlError } = supabase.storage
+  const { data: urlData } = supabase.storage
     .from('pet-images')
     .getPublicUrl(data.path);
-
-  if (urlError || !urlData) {
-    toast({
-      title: "Failed to retrieve image URL",
-      description: urlError?.message || "Unknown error occurred",
-      variant: "destructive",
-    });
-    return null;
-  }
 
   return urlData.publicUrl;
 };

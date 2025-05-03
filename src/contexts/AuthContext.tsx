@@ -15,6 +15,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [userPlan, setUserPlan] = useState<PlanType>('basic');
+  const [authInitialized, setAuthInitialized] = useState(false);
 
   const updateUserData = async () => {
     try {
@@ -27,11 +28,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser({
             id: currentUser.id,
             email: currentUser.email || '',
-            full_name: profile.full_name,
+            full_name: profile.full_name || '',
             plan: (profile.plan as PlanType) || 'basic',
           });
           
           setUserPlan((profile.plan as PlanType) || 'basic');
+        } else {
+          console.log("No profile found for user:", currentUser.id);
+          // Create a minimal user object even without a profile
+          setUser({
+            id: currentUser.id,
+            email: currentUser.email || '',
+            full_name: '',
+            plan: 'basic',
+          });
+          setUserPlan('basic');
         }
       } else {
         setUser(null);
@@ -39,6 +50,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Error updating user data:", error);
+      // Even if there's an error, we should set loading to false
+      setUser(null);
     }
   };
 
@@ -49,7 +62,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } catch (error) {
         console.error("Error fetching user:", error);
       } finally {
+        // Always set loading to false, even on error
+        setUser(null);
+        setUserPlan('basic');
         setLoading(false);
+        setAuthInitialized(true);
       }
     };
 
@@ -58,12 +75,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Listen for auth changes
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log("Auth state changed:", event);
+        setLoading(true);
+
         if (session && session.user) {
           await updateUserData();
         } else {
           setUser(null);
           setUserPlan('basic');
         }
+
+        setLoading(false);
       }
     );
 
@@ -73,7 +95,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, userPlan, updateUserData }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      loading: loading || !authInitialized, 
+      userPlan, 
+      updateUserData 
+    }}>
       {children}
     </AuthContext.Provider>
   );

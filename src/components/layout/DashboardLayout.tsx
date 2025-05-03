@@ -30,17 +30,17 @@ const DashboardLayout = ({ children, isAdmin = false }: DashboardLayoutProps) =>
   // Define navigation items based on user role
   const navigationItems = isAdmin 
     ? [
-        { label: "Dashboard", href: "/admin/dashboard", icon: <LayoutDashboard size={18} /> },
-        { label: "Users", href: "/admin/users", icon: <Users size={18} /> },
-        { label: "Pets", href: "/admin/pets", icon: <PawPrint size={18} /> },
-        { label: "Analytics", href: "/admin/analytics", icon: <LineChart size={18} /> },
-        { label: "Settings", href: "/admin/settings", icon: <Settings size={18} /> },
+        { label: "لوحة التحكم", href: "/admin/dashboard", icon: <LayoutDashboard size={18} /> },
+        { label: "المستخدمون", href: "/admin/users", icon: <Users size={18} /> },
+        { label: "الحيوانات", href: "/admin/pets", icon: <PawPrint size={18} /> },
+        { label: "التحليلات", href: "/admin/analytics", icon: <LineChart size={18} /> },
+        { label: "الإعدادات", href: "/admin/settings", icon: <Settings size={18} /> },
       ]
     : [
-        { label: "Dashboard", href: "/dashboard", icon: <LayoutDashboard size={18} /> },
-        { label: "My Pets", href: "/pets", icon: <PawPrint size={18} /> },
-        { label: "Scans", href: "/scans", icon: <LineChart size={18} /> },
-        { label: "Account", href: "/account", icon: <User size={18} /> },
+        { label: "لوحة التحكم", href: "/dashboard", icon: <LayoutDashboard size={18} /> },
+        { label: "حيواناتي", href: "/pets", icon: <PawPrint size={18} /> },
+        { label: "المسح", href: "/scans", icon: <LineChart size={18} /> },
+        { label: "الحساب", href: "/account", icon: <User size={18} /> },
       ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -50,13 +50,13 @@ const DashboardLayout = ({ children, isAdmin = false }: DashboardLayoutProps) =>
       to={href}
       className={`flex items-center px-4 py-2 rounded-md transition-colors ${
         isActive(href)
-          ? "bg-pet-purple text-white"
-          : "hover:bg-pet-purple/10"
+          ? "bg-primary text-white"
+          : "hover:bg-primary/10"
       }`}
       onClick={() => setMenuOpen(false)}
     >
-      <span className="mr-2">{icon}</span>
-      {label}
+      <span className="ml-2">{icon}</span>
+      <span className="ar">{label}</span>
     </Link>
   );
 
@@ -65,8 +65,9 @@ const DashboardLayout = ({ children, isAdmin = false }: DashboardLayoutProps) =>
       <div className="p-4">
         <div className="flex items-center justify-between">
           <Link to={isAdmin ? "/admin/dashboard" : "/dashboard"} className="flex items-center">
-            <span className="text-xl font-bold text-pet-purple">PetTouch</span>
-            {isAdmin && <span className="ml-2 text-xs bg-pet-purple text-white px-2 py-0.5 rounded-md">ADMIN</span>}
+            <img src="/lovable-uploads/d8049df2-619a-44e5-9cd8-c54416c17875.png" alt="PetTouch" className="h-8 w-8 mr-2" />
+            <span className="text-xl font-bold text-primary">PetTouch</span>
+            {isAdmin && <span className="ml-2 text-xs bg-primary text-white px-2 py-0.5 rounded-md">مدير</span>}
           </Link>
           {isMobile && (
             <Button
@@ -82,7 +83,7 @@ const DashboardLayout = ({ children, isAdmin = false }: DashboardLayoutProps) =>
 
         {user && (
           <div className="mt-8 flex items-center gap-2">
-            <div className="h-10 w-10 rounded-full bg-pet-purple flex items-center justify-center text-white">
+            <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-white">
               {user.full_name ? user.full_name[0] : user.email[0]}
             </div>
             <div>
@@ -90,7 +91,7 @@ const DashboardLayout = ({ children, isAdmin = false }: DashboardLayoutProps) =>
                 {user.full_name || user.email.split("@")[0]}
               </div>
               <div className="text-xs text-muted-foreground">
-                {isAdmin ? "Administrator" : `${planFeatures[userPlan].name} Plan`}
+                {isAdmin ? "مدير النظام" : `خطة ${planFeatures[userPlan].name}`}
               </div>
             </div>
           </div>
@@ -115,7 +116,7 @@ const DashboardLayout = ({ children, isAdmin = false }: DashboardLayoutProps) =>
                 setMenuOpen(false);
               }}
             >
-              <Plus className="mr-2 h-4 w-4" /> Add New Pet
+              <Plus className="ml-2 h-4 w-4" /> إضافة حيوان جديد
             </Button>
           )}
         </nav>
@@ -125,14 +126,14 @@ const DashboardLayout = ({ children, isAdmin = false }: DashboardLayoutProps) =>
 
       <div className="p-4">
         <Button variant="outline" className="w-full" onClick={handleSignOut}>
-          Sign out
+          تسجيل الخروج
         </Button>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" dir="rtl">
       {/* Mobile Navigation */}
       {isMobile ? (
         <header className="border-b">
@@ -143,19 +144,20 @@ const DashboardLayout = ({ children, isAdmin = false }: DashboardLayoutProps) =>
                   <Menu size={20} />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="w-[240px] sm:w-[300px]">
+              <SheetContent side="right" className="w-[240px] sm:w-[300px]">
                 <SidebarContent />
               </SheetContent>
             </Sheet>
             <div className="flex-1 flex justify-center">
               <Link to={isAdmin ? "/admin/dashboard" : "/dashboard"} className="flex items-center">
-                <span className="text-xl font-bold text-pet-purple">
+                <img src="/lovable-uploads/d8049df2-619a-44e5-9cd8-c54416c17875.png" alt="PetTouch" className="h-8 w-8 mr-2" />
+                <span className="text-xl font-bold text-primary">
                   PetTouch
                 </span>
-                {isAdmin && <span className="ml-1 text-xs bg-pet-purple text-white px-1.5 py-0.5 rounded-md">ADMIN</span>}
+                {isAdmin && <span className="mr-1 text-xs bg-primary text-white px-1.5 py-0.5 rounded-md">مدير</span>}
               </Link>
             </div>
-            <Link to={isAdmin ? "/admin/settings" : "/account"} className="ml-auto">
+            <Link to={isAdmin ? "/admin/settings" : "/account"} className="mr-auto">
               <Button variant="ghost" size="icon">
                 {isAdmin ? <Settings size={20} /> : <User size={20} />}
               </Button>
@@ -165,14 +167,14 @@ const DashboardLayout = ({ children, isAdmin = false }: DashboardLayoutProps) =>
       ) : (
         <div className="flex">
           {/* Desktop Sidebar */}
-          <aside className="w-64 border-r bg-background h-screen sticky top-0">
+          <aside className="w-64 border-l bg-background h-screen sticky top-0">
             <SidebarContent />
           </aside>
         </div>
       )}
 
       {/* Main content */}
-      <main className={`${isMobile ? "p-4" : "p-8 ml-64"}`}>
+      <main className={`${isMobile ? "p-4" : "p-8 mr-64"}`}>
         {children}
       </main>
     </div>

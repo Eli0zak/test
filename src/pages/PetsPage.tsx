@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -51,14 +52,15 @@ const PetsPage = () => {
     if (animalToDelete) {
       const success = await deleteAnimal(animalToDelete.id);
       if (success) {
-        setAnimals((prev) => prev.filter((a) => a.id !== animalToDelete.id));
+        setAnimals(animals.filter((a) => a.id !== animalToDelete.id));
         toast({
           title: "Pet deleted",
           description: `${animalToDelete.name} has been removed from your account.`,
         });
-        setDeleteDialogOpen(false);
       }
     }
+    setDeleteDialogOpen(false);
+    setAnimalToDelete(null);
   };
 
   if (!user) {

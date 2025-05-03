@@ -1,5 +1,6 @@
+
 import { Animal } from "@/types";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { getPlanColor } from "@/lib/plans";
 import { useNavigate } from "react-router-dom";
@@ -40,13 +41,12 @@ const PetCard = ({ animal, onEdit, onDelete, onView, showActions = true }: PetCa
         </div>
       </div>
       
-      <CardHeader>
-        <h3 className="text-lg font-bold">{animal.name}</h3>
-        <p className="text-sm text-muted-foreground capitalize">{animal.type}</p>
-      </CardHeader>
-      
       <CardContent className="pt-4">
         <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-lg font-bold">{animal.name}</h3>
+            <p className="text-sm text-muted-foreground capitalize">{animal.type}</p>
+          </div>
           <div className="flex gap-1 text-xs">
             <div className="flex items-center">
               {animal.plan === 'comfort' || animal.plan === 'vip' ? (
