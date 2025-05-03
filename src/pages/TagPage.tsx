@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getAnimalById, recordAnimalScan } from "@/lib/supabase";
@@ -46,6 +45,18 @@ const TagPage = () => {
 
     fetchAnimal();
   }, [id]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (loading) {
+        console.warn("Loading state persisted for too long. Redirecting to error page.");
+        setError("حدثت مشكلة في تحميل البيانات. يرجى المحاولة لاحقًا.");
+        setLoading(false);
+      }
+    }, 10000); // 10 seconds timeout
+
+    return () => clearTimeout(timeout);
+  }, [loading]);
 
   if (loading) {
     return (

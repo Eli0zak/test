@@ -22,10 +22,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const updateUserData = async () => {
     try {
       const currentUser = await getCurrentUser();
-      
+
       if (currentUser) {
         const profile = await getUserProfile(currentUser.id);
-        
+
         if (profile) {
           setUser({
             id: currentUser.id,
@@ -34,13 +34,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             plan: (profile.plan as PlanType) || 'basic',
             role: profile.role || 'user',
           });
-          
+
           setUserPlan((profile.plan as PlanType) || 'basic');
-          setIsAdmin(profile.role === 'admin'); // Check if user is admin
+          setIsAdmin(profile.role === 'admin');
         } else {
-          console.log("No profile found for user:", currentUser.id);
-          // Create a minimal user object even without a profile
-          setUser({
+          console.warn("No profile found for user:", currentUser.id);
+          setUser((prevUser) => prevUser || {
             id: currentUser.id,
             email: currentUser.email || '',
             full_name: '',
@@ -56,9 +55,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     } catch (error) {
       console.error("Error updating user data:", error);
-      // Even if there's an error, we should set loading to false
-      setUser(null);
-      setIsAdmin(false);
+      // Retain the previous user state in case of an error
+    } finally {
+      setLoading(false);
     }
   };
 

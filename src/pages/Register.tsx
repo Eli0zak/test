@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
@@ -35,6 +34,17 @@ const Register = () => {
       navigate('/dashboard');
     }
   }, [user, loading, navigate]);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (loading) {
+        console.warn("Loading state persisted for too long. Redirecting to login.");
+        navigate('/login');
+      }
+    }, 10000); // 10 seconds timeout
+
+    return () => clearTimeout(timeout);
+  }, [loading, navigate]);
 
   const form = useForm<RegisterFormValues>({
     defaultValues: {
