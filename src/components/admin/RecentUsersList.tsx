@@ -1,8 +1,8 @@
-
 import { UserProfile } from "@/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface RecentUsersListProps {
   users: UserProfile[];
@@ -10,6 +10,12 @@ interface RecentUsersListProps {
 }
 
 const RecentUsersList = ({ users, isLoading }: RecentUsersListProps) => {
+  const { isAdmin } = useAuth();
+
+  if (!isAdmin) {
+    return <p className="text-muted-foreground">Access denied.</p>; // Restrict access to admins
+  }
+
   return (
     <Card>
       <CardHeader>

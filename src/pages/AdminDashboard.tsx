@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
@@ -7,9 +6,11 @@ import { Animal, UserProfile } from "@/types";
 import AdminStats from "@/components/admin/AdminStats";
 import RecentUsersList from "@/components/admin/RecentUsersList";
 import RecentPetsList from "@/components/admin/RecentPetsList";
+import { useNavigate } from "react-router-dom";
 
 const AdminDashboard = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
+  const navigate = useNavigate();
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [users, setUsers] = useState<UserProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -19,6 +20,12 @@ const AdminDashboard = () => {
     totalScans: 0,
     premiumUsers: 0
   });
+
+  useEffect(() => {
+    if (!isAdmin) {
+      navigate('/dashboard'); // Redirect non-admin users
+    }
+  }, [isAdmin, navigate]);
 
   useEffect(() => {
     const fetchData = async () => {

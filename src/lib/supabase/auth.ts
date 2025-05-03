@@ -75,6 +75,7 @@ export const signOut = async () => {
     // Clear local storage and cookies explicitly
     localStorage.clear();
     document.cookie = "supabase-auth-token=; Max-Age=0; path=/;";
+    document.cookie = "session=; Max-Age=0; path=/;"; // Clear session cookie
   } catch (error: any) {
     console.error("Unexpected sign out error:", error.message);
   }

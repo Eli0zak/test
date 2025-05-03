@@ -7,6 +7,7 @@ interface AuthContextType {
   loading: boolean;
   userPlan: PlanType;
   updateUserData: () => Promise<void>;
+  isAdmin: boolean; // Add isAdmin to context
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -16,6 +17,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [userPlan, setUserPlan] = useState<PlanType>('basic');
   const [authInitialized, setAuthInitialized] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const updateUserData = async () => {
     try {
@@ -30,9 +32,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             email: currentUser.email || '',
             full_name: profile.full_name || '',
             plan: (profile.plan as PlanType) || 'basic',
+            role: profile.role || 'user',
           });
           
           setUserPlan((profile.plan as PlanType) || 'basic');
+          setIsAdmin(profile.role === 'admin'); // Check if user is admin
         } else {
           console.log("No profile found for user:", currentUser.id);
           // Create a minimal user object even without a profile
@@ -43,15 +47,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             plan: 'basic',
           });
           setUserPlan('basic');
+          setIsAdmin(false);
         }
       } else {
         setUser(null);
         setUserPlan('basic');
+        setIsAdmin(false);
       }
     } catch (error) {
       console.error("Error updating user data:", error);
       // Even if there's an error, we should set loading to false
       setUser(null);
+      setIsAdmin(false);
     }
   };
 
@@ -67,6 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUserPlan('basic');
         setLoading(false);
         setAuthInitialized(true);
+        setIsAdmin(false);
       }
     };
 
@@ -83,6 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           setUser(null);
           setUserPlan('basic');
+          setIsAdmin(false);
         }
 
         setLoading(false);
@@ -99,7 +108,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user, 
       loading: loading || !authInitialized, 
       userPlan, 
-      updateUserData 
+      updateUserData, 
+      isAdmin 
     }}>
       {children}
     </AuthContext.Provider>
